@@ -57,5 +57,38 @@ services:
       timeout: 10s
       retries: 5
 
+  product-service:
+    build:
+      context: ..
+      dockerfile: services/product-service/Dockerfile
+    env_file:
+      - ../services/product-service/.env
+    networks:
+      - internal
+    ports:
+      - "3002:3002"
+    depends_on:
+      product-mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  product-mongo:
+    image: mongo:7
+    networks:
+      - internal
+    volumes:
+      - product-mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
 volumes:
   user-mongo-data:
+  product-mongo-data:

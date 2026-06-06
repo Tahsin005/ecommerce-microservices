@@ -5,6 +5,7 @@ const config = {
   jwtSecret: process.env.JWT_SECRET,
   services: {
     user: process.env.USER_SERVICE_URL || 'http://user-service:3001',
+    product: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002',
   },
 }
 

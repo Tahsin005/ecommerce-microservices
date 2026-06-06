@@ -3,6 +3,7 @@ import logger from './middlewares/logger.middleware.js'
 import { globalLimiter, authLimiter } from './middlewares/rateLimit.middleware.js'
 import errorMiddleware from './middlewares/error.middleware.js'
 import userProxy from './proxy/user.proxy.js'
+import productProxy from './proxy/product.proxy.js'
 import authenticate from './middlewares/auth.middleware.js'
 
 const app = express()
@@ -24,6 +25,12 @@ app.use('/api/auth', authLimiter, userProxy)
 
 // user routes — verify JWT, then proxy to user-service
 app.use('/api/users', authenticate, userProxy)
+
+// product routes — proxy to product-service
+app.use('/api/products', authenticate, productProxy)
+
+// category routes — proxy to product-service
+app.use('/api/categories', authenticate, productProxy)
 
 // 404
 app.use((req, res) => {
