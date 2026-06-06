@@ -1,0 +1,12 @@
+{
+  "name": "ecommerce-platform",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "lint": "eslint services/ packages/",
+    "test": "jest --projects services/*"
+  }
+}
