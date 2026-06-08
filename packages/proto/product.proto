@@ -5,6 +5,7 @@ package product;
 service ProductService {
   rpc GetProduct (GetProductRequest) returns (GetProductResponse);
   rpc CheckStock (CheckStockRequest) returns (CheckStockResponse);
+  rpc ReserveStock  (ReserveStockRequest)  returns (ReserveStockResponse);
 }
 
 message GetProductRequest {
@@ -29,4 +30,14 @@ message CheckStockRequest {
 message CheckStockResponse {
   bool   available = 1;
   int32  inventory = 2;
+}
+
+message ReserveStockRequest {
+  string productId = 1;
+  int32  quantity  = 2;
+}
+
+message ReserveStockResponse {
+  bool   success      = 1;
+  int32  newInventory = 2;
 }

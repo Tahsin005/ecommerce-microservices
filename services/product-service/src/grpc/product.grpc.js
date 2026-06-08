@@ -53,12 +53,33 @@ const checkStock = async (call, callback) => {
   }
 }
 
+const reserveStock = async (call, callback) => {
+  try {
+    const { productId, quantity } = call.request
+
+    const { available } = await productService.updateInventory(productId, -quantity)
+
+    const updated = await productService.getById(productId)
+
+    callback(null, {
+      success:      true,
+      newInventory: updated.inventory,
+    })
+  } catch (err) {
+    callback({
+      code:    grpc.status.FAILED_PRECONDITION,
+      message: err.message,
+    })
+  }
+}
+
 export const startGrpcServer = (port) => {
   const server = new grpc.Server()
 
   server.addService(productProto.ProductService.service, {
     getProduct,
     checkStock,
+    reserveStock,
   })
 
   server.bindAsync(
