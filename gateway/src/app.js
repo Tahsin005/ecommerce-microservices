@@ -5,6 +5,7 @@ import errorMiddleware from './middlewares/error.middleware.js'
 import userProxy from './proxy/user.proxy.js'
 import productProxy from './proxy/product.proxy.js'
 import authenticate from './middlewares/auth.middleware.js'
+import authenticateWrites from './middlewares/conditionalAuth.middleware.js'
 
 const app = express()
 
@@ -27,10 +28,10 @@ app.use('/api/auth', authLimiter, userProxy)
 app.use('/api/users', authenticate, userProxy)
 
 // product routes — proxy to product-service
-app.use('/api/products', authenticate, productProxy)
+app.use('/api/products', authenticateWrites, productProxy)
 
 // category routes — proxy to product-service
-app.use('/api/categories', authenticate, productProxy)
+app.use('/api/categories', authenticateWrites, productProxy)
 
 // 404
 app.use((req, res) => {

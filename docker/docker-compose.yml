@@ -70,6 +70,8 @@ services:
     depends_on:
       product-mongo:
         condition: service_healthy
+      user-service:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
       interval: 30s

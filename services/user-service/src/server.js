@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import app from './app.js'
 import config from './config.js'
+import { startGrpcServer } from './grpc/user.grpc.js'
 
 async function start() {
     try {
@@ -11,7 +12,7 @@ async function start() {
             console.log(`[user-service] HTTP listening on port ${config.port}`)
         })
 
-
+        startGrpcServer(config.grpcPort)
     } catch (err) {
         console.error('[user-service] Failed to start:', err)
         process.exit(1)
