@@ -4,6 +4,7 @@ import { globalLimiter, authLimiter } from './middlewares/rateLimit.middleware.j
 import errorMiddleware from './middlewares/error.middleware.js'
 import userProxy from './proxy/user.proxy.js'
 import productProxy from './proxy/product.proxy.js'
+import cartProxy from './proxy/cart.proxy.js'
 import authenticate from './middlewares/auth.middleware.js'
 import authenticateWrites from './middlewares/conditionalAuth.middleware.js'
 
@@ -32,6 +33,8 @@ app.use('/api/products', authenticateWrites, productProxy)
 
 // category routes — proxy to product-service
 app.use('/api/categories', authenticateWrites, productProxy)
+
+app.use('/api/cart', authenticate, cartProxy)
 
 // 404
 app.use((req, res) => {

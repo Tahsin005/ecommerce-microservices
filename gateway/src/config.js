@@ -6,6 +6,7 @@ const config = {
   services: {
     user: process.env.USER_SERVICE_URL || 'http://user-service:3001',
     product: process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002',
+    cart: process.env.CART_SERVICE_URL || 'http://cart-service:3003',
   },
 }
 
