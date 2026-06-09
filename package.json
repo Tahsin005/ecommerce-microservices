@@ -7,10 +7,11 @@
   ],
   "scripts": {
     "lint": "eslint services/ packages/",
-    "test": "jest --projects services/*"
+    "test": "jest --projects services/* --passWithNoTests"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "eslint": "^10.4.1"
+    "eslint": "^10.4.1",
+    "jest": "^30.4.2"
   }
 }
