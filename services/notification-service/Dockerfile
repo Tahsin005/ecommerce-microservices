@@ -1,7 +1,5 @@
 FROM node:22-alpine
 
-RUN apk add --no-cache curl
-
 WORKDIR /app
 
 COPY package.json package-lock.json ./
@@ -11,9 +9,6 @@ COPY packages ./packages
 
 RUN npm install
 
-WORKDIR /app/services/user-service
-
-EXPOSE 3001
-EXPOSE 50051
+WORKDIR /app/services/notification-service
 
 CMD ["node", "src/server.js"]

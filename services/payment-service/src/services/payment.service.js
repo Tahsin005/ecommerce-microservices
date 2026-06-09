@@ -1,6 +1,9 @@
 import paymentRepository from '../repositories/payment.repository.js'
 import orderClient from '../grpc/order.client.js'
-import { AppError } from '@ecommerce/common'
+import userClient from '../grpc/user.client.js'
+import { AppError, rabbitmq } from '@ecommerce/common'
+
+const EXCHANGE = 'notifications'
 
 const paymentService = {
     async getPaymentByOrder(orderId, userId) {
@@ -35,6 +38,20 @@ const paymentService = {
 
         // update order status to confirmed
         await orderClient.updateOrderStatus(orderId, 'confirmed')
+
+        const user = await userClient.getUser(userId)
+
+        rabbitmq.publish(EXCHANGE, 'order.confirmed', {
+            type: 'order.confirmed',
+            payload: {
+                orderId:    order.id,
+                userId:     userId,
+                userEmail:  user.email,
+                userName:   user.name,
+                totalPrice: order.totalPrice,
+                items:      order.items,
+            },
+        })
 
         return payment
     },

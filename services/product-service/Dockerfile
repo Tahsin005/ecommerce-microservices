@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 RUN apk add --no-cache curl
 
@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY services/product-service ./services/product-service
 COPY packages ./packages
 
-RUN npm ci
+RUN npm install
 
 WORKDIR /app/services/product-service
 

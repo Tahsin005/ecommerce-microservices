@@ -170,6 +170,8 @@ services:
         condition: service_healthy
       order-service:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3005/health"]
       interval: 30s
@@ -188,6 +190,33 @@ services:
       interval: 20s
       timeout: 10s
       retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    networks:
+      - internal
+    ports:
+      - "15672:15672"   # management UI — http://localhost:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
+  notification-service:
+    build:
+      context: ..
+      dockerfile: services/notification-service/Dockerfile
+    env_file:
+      - ../services/notification-service/.env
+    networks:
+      - internal
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 
 volumes:
   user-mongo-data:

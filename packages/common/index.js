@@ -1,2 +1,2 @@
-import { AppError } from './errors.js'
-export { AppError }
+export * from './errors.js'
+export { default as rabbitmq } from './rabbitmq.js'
