@@ -6,6 +6,7 @@ import userProxy from './proxy/user.proxy.js'
 import productProxy from './proxy/product.proxy.js'
 import cartProxy from './proxy/cart.proxy.js'
 import orderProxy from './proxy/order.proxy.js'
+import paymentProxy from './proxy/payment.proxy.js'
 import authenticate from './middlewares/auth.middleware.js'
 import authenticateWrites from './middlewares/conditionalAuth.middleware.js'
 
@@ -40,6 +41,9 @@ app.use('/api/cart', authenticate, cartProxy)
 
 // order routes — proxy to order-service
 app.use('/api/orders', authenticate, orderProxy)
+
+// payment routes — proxy to payment-service
+app.use('/api/payments', authenticate, paymentProxy)
 
 // 404
 app.use((req, res) => {

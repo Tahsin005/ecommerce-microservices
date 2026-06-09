@@ -8,5 +8,9 @@
   "scripts": {
     "lint": "eslint services/ packages/",
     "test": "jest --projects services/*"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.4.1"
   }
 }

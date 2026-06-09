@@ -11,8 +11,8 @@ COPY packages ./packages
 
 RUN npm ci
 
-WORKDIR /app/services/order-service
+WORKDIR /app/services/payment-service
 
-EXPOSE 3004
+EXPOSE 3005
 
 CMD ["node", "src/server.js"]
