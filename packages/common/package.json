@@ -4,6 +4,7 @@
   "main": "index.js",
   "type": "module",
   "dependencies": {
-    "amqplib": "^2.0.1"
+    "amqplib": "^2.0.1",
+    "redis": "^6.0.0"
   }
 }
