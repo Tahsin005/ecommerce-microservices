@@ -6,11 +6,15 @@ const cartRepository = {
   },
 
   async upsert(userId, items) {
-    const cart = await Cart.findOneAndUpdate(
-      { userId },
-      { items },
-      { new: true, upsert: true, runValidators: true }
-    )
+    let cart = await Cart.findOne({ userId })
+
+    if (cart) {
+      cart.items = items
+    } else {
+      cart = new Cart({ userId, items })
+    }
+
+    await cart.save() 
     return cart.toObject()
   },
 

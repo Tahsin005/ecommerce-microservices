@@ -5,6 +5,7 @@ import errorMiddleware from './middlewares/error.middleware.js'
 import userProxy from './proxy/user.proxy.js'
 import productProxy from './proxy/product.proxy.js'
 import cartProxy from './proxy/cart.proxy.js'
+import orderProxy from './proxy/order.proxy.js'
 import authenticate from './middlewares/auth.middleware.js'
 import authenticateWrites from './middlewares/conditionalAuth.middleware.js'
 
@@ -34,7 +35,11 @@ app.use('/api/products', authenticateWrites, productProxy)
 // category routes — proxy to product-service
 app.use('/api/categories', authenticateWrites, productProxy)
 
+// cart routes — proxy to cart-service
 app.use('/api/cart', authenticate, cartProxy)
+
+// order routes — proxy to order-service
+app.use('/api/orders', authenticate, orderProxy)
 
 // 404
 app.use((req, res) => {

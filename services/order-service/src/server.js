@@ -1,0 +1,19 @@
+import mongoose from 'mongoose'
+import app from './app.js'
+import config from './config.js'
+
+async function start() {
+    try {
+        await mongoose.connect(config.mongoUri)
+        console.log('[order-service] MongoDB connected')
+
+        app.listen(config.port, () => {
+            console.log(`[order-service] HTTP listening on port ${config.port}`)
+        })
+    } catch (err) {
+        console.error('[order-service] Failed to start:', err)
+        process.exit(1)
+    }
+}
+
+start()

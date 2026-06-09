@@ -20,10 +20,14 @@ const { cart: cartProto } = grpc.loadPackageDefinition(packageDef)
 const getCart = async (call, callback) => {
   try {
     const cart = await cartService.getCart(call.request.userId)
+    const totalPrice = cart.items.reduce(
+      (sum, item) => sum + item.price * item.quantity, 0
+    )
+
     callback(null, {
       userId:     cart.userId,
       items:      cart.items,
-      totalPrice: cart.totalPrice || 0,
+      totalPrice: totalPrice,
     })
   } catch (err) {
     callback({
