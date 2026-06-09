@@ -53,9 +53,15 @@ const cartService = {
       // remove item if quantity is 0 or less
       cart.items.splice(itemIndex, 1)
     } else {
+      const product = await productClient.getProduct(productId)
+      if (!product.isActive) throw new AppError('Product is not available', 400)
+
       const { available } = await productClient.checkStock(productId, quantity)
       if (!available) throw new AppError('Insufficient stock', 400)
+      
       cart.items[itemIndex].quantity = quantity
+      cart.items[itemIndex].price = product.price
+      cart.items[itemIndex].name = product.name
     }
 
     return cartRepository.upsert(userId, cart.items)

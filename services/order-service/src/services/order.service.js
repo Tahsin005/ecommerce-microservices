@@ -26,14 +26,25 @@ const orderService = {
         }
 
         // reserve stock for each item via gRPC
-        // if any reservation fails, we stop — partially reserved stock
         const reservations = []
-        for (const item of cart.items) {
-            const result = await productClient.reserveStock(item.productId, item.quantity)
-            if (!result.success) {
-                throw new AppError(`Failed to reserve stock for ${item.name}`, 400)
+        try {
+            for (const item of cart.items) {
+                const result = await productClient.reserveStock(item.productId, item.quantity)
+                if (!result.success) {
+                    throw new AppError(`Failed to reserve stock for ${item.name}`, 400)
+                }
+                reservations.push(item)
             }
-            reservations.push(item)
+        } catch (err) {
+            // rollback successful reservations
+            for (const reserved of reservations) {
+                try {
+                    await productClient.releaseStock(reserved.productId, reserved.quantity)
+                } catch (rollbackErr) {
+                    console.error(`Failed to rollback stock for ${reserved.productId}`, rollbackErr)
+                }
+            }
+            throw err
         }
 
         // create order
@@ -58,6 +69,15 @@ const orderService = {
 
         if (!['pending', 'confirmed'].includes(order.status)) {
             throw new AppError(`Cannot cancel an order with status: ${order.status}`, 400)
+        }
+
+        // release stock
+        for (const item of order.items) {
+            try {
+                await productClient.releaseStock(item.productId, item.quantity)
+            } catch (err) {
+                console.error(`Failed to release stock for ${item.productId} on order cancel`, err)
+            }
         }
 
         return orderRepository.updateStatus(orderId, 'cancelled')

@@ -31,4 +31,9 @@ const reserveStock = (productId, quantity) => {
     })
 }
 
-export default { reserveStock }
+const releaseStock = (productId, quantity) => {
+    // releasing is just reserving a negative quantity
+    return reserveStock(productId, -quantity)
+}
+
+export default { reserveStock, releaseStock }
