@@ -1,4 +1,6 @@
-const authenticate = (req, res, next) => {
+import userClient from '../grpc/user.client.js'
+
+const authenticate = async (req, res, next) => {
   const userId = req.headers['x-user-id']
   const userRole = req.headers['x-user-role']
 
@@ -6,8 +8,15 @@ const authenticate = (req, res, next) => {
     return res.status(401).json({ success: false, message: 'Unauthorized' })
   }
 
-  req.user = { sub: userId, role: userRole }
-  next()
+  try {
+    // confirm user actually exists in DB via gRPC
+    const user = await userClient.getUser(userId)
+
+    req.user = { sub: user.id, role: user.role }
+    next()
+  } catch {
+    return res.status(401).json({ success: false, message: 'User not found or inactive' })
+  }
 }
 
 export default authenticate
